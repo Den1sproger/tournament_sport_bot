@@ -3,6 +3,8 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 def get_scores_by_coeff(coeff: str) -> int:
     # get the quantity of scores by coefficient
+    if not coeff:
+        return 0
     coefficient = float(coeff.replace(',', '.'))
     if coefficient < 1.26:
         return 2
@@ -21,7 +23,7 @@ def get_scores_by_coeff(coeff: str) -> int:
 
 
 def get_question_ikb(quantity: int,
-                     current_question_number: int,
+                     current_question_index: int,
                      coeffs: list[str],
                      answer: int = None) -> InlineKeyboardMarkup:
     # keyboard for the one question
@@ -51,7 +53,7 @@ def get_question_ikb(quantity: int,
         ]
     inline_keyboard.append([
             InlineKeyboardButton('<', callback_data='previous_question'),
-            InlineKeyboardButton(f'{current_question_number}/{quantity}', callback_data='0'),
+            InlineKeyboardButton(f'{current_question_index + 1}/{quantity}', callback_data='0'),
             InlineKeyboardButton('>', callback_data='next_question')
     ])
     inline_keyboard.append(

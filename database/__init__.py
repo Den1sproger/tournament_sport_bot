@@ -4,6 +4,7 @@ from .db_work import Database
 
 TOURNAMENT_TYPES = ['SLOW', 'STANDART', 'FAST']
 PROMPT_VIEW_USERS = "SELECT chat_id, nickname FROM users;"
+PROMPT_VIEW_CURRENT_CHAT_iDS = "SELECT chat_id FROM current_questions;"
 
 
 def get_prompt_view_games(tourn_type: str) -> str:
@@ -39,6 +40,37 @@ def get_prompt_view_nickname(chat_id: str) -> str:
     return f"SELECT nickname FROM users WHERE chat_id='{chat_id}';"
 
 
+def get_prompt_view_current_info(chat_id: str) -> str:
+    return f"SELECT current_index, current_tournament FROM current_questions WHERE chat_id='{chat_id}';"
+
+
+def get_prompt_increase_current_index(chat_id: str) -> str:
+    return f"UPDATE current_questions SET current_index=current_index+1 WHERE chat_id='{chat_id}';"
+
+
+def get_prompt_decrease_current_index(chat_id: str)-> str:
+    return f"UPDATE current_questions SET current_index=current_index-1 WHERE chat_id='{chat_id}';"
+
+
+def get_prompt_update_current_info(chat_id: str,
+                                   new_tourn: str) -> str:
+    return f"UPDATE current_questions SET current_tournament='{new_tourn}', current_index=0  WHERE chat_id='{chat_id}';"
+
+
+def get_prompt_update_current_index(chat_id: str,
+                                    new_index: int) -> str:
+    return f"UPDATE current_questions SET current_index={new_index} WHERE chat_id='{chat_id}';"
+
+
+def get_prompt_add_current_info(chat_id: str,
+                                tournament: str) -> str:
+    return f"INSERT INTO current_questions (chat_id, current_index, current_tournament) VALUES ('{chat_id}', 0, '{tournament}');"
+
+
+def get_prompt_delete_current_info(chat_id: str) -> str:
+    return f"DELETE FROM current_questions WHERE chat_id='{chat_id}';"
+
+
 def get_prompt_add_answer(chat_id: str,
                           tournament: str,
                           answer: int,
@@ -59,23 +91,34 @@ def get_prompt_update_answer(chat_id: str,
     return f"UPDATE answers SET answer={new_answer} WHERE chat_id='{chat_id}' AND game_key='{game_key}' AND tournament='{tournament}';"
 
 
-def get_prompt_view_user_tournaments(chat_id: str) -> str:
-    return f"SELECT tournament FROM users_tournaments WHERE chat_id='{chat_id}';"
+# def get_prompt_view_user_tournaments(chat_id: str) -> str:
+#     return f"SELECT tournament FROM users_tournaments WHERE chat_id='{chat_id}';"
+
+def get_prompt_view_user_tournaments(nickname: str) -> str:
+    return f"SELECT tournament FROM participants WHERE nickname='{nickname}';"
 
 
-def get_prompt_add_user_tournament(chat_id: str,
-                                   tournament: str) -> str:
-    return f"INSERT INTO users_tournaments (chat_id, tournament) VALUES ('{chat_id}', '{tournament}');"
+# def get_prompt_add_user_tournament(chat_id: str,
+#                                    tournament: str) -> str:
+#     return f"INSERT INTO users_tournaments (chat_id, tournament) VALUES ('{chat_id}', '{tournament}');"
 
 
-def get_prompt_delete_user_tournaments(chat_id: str) -> str:
-    return f"DELETE FROM users_tournaments WHERE chat_id='{chat_id}';"
+# def get_prompt_delete_user_tournaments(chat_id: str) -> str:
+#     return f"DELETE FROM users_tournaments WHERE chat_id='{chat_id}';"
 
 
 __all__ = [
     'Database',
     'TOURNAMENT_TYPES',
     'PROMPT_VIEW_USERS',
+    'PROMPT_VIEW_CURRENT_CHAT_iDS',
+    'get_prompt_view_current_info',
+    'get_prompt_update_current_index',
+    'get_prompt_update_current_info',
+    'get_prompt_increase_current_index',
+    'get_prompt_decrease_current_index',
+    'get_prompt_add_current_info',
+    'get_prompt_delete_current_info',
     'get_prompt_view_games',
     'get_prompt_view_rating',
     'get_prompt_add_user',
@@ -86,6 +129,4 @@ __all__ = [
     'get_prompt_view_answer',
     'get_prompt_update_answer',
     'get_prompt_view_user_tournaments',
-    'get_prompt_add_user_tournament',
-    'get_prompt_delete_user_tournaments'
 ]

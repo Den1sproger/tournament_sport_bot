@@ -18,7 +18,5 @@ default_commands = [
     BotCommand('start', 'Запустить бота'),
     BotCommand('help', 'Помощь'),
     BotCommand('nickname', 'Ввести ник'),
-    BotCommand('current_tournaments', 'Текущие турниры'),
-    BotCommand('my_tournaments', 'Мои турниры'),
-    BotCommand('stop', 'Отменить операцию')
+    BotCommand('current_tournaments', 'Текущие турниры')
 ]

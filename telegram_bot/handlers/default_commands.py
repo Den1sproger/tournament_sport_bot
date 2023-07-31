@@ -8,18 +8,7 @@ from database import (Database,
                       PROMPT_VIEW_USERS,
                       get_prompt_update_nickname,
                       get_prompt_view_user_tournaments)
-from googlesheets import Users, Rating, Comparison
-
-
-
-# stop the dialog
-@dp.message_handler(Text(equals='⛔️Стоп'), state='*')
-@dp.message_handler(Command('stop'), state='*')
-async def stop(message: types.Message, state=FSMContext) -> None:
-    if state is None: pass
-    else:
-        await state.finish()
-        await message.reply('Вы прервали операцию')
+from googlesheets import Users, Rating
 
 
 
@@ -74,7 +63,7 @@ async def get_nickname(message: types.Message, state: FSMContext) -> None:
 
 
 # open the tournament games with the coefficients
-@dp.message_handler(Text(equals='🏀🏐Текущие турниры'))
+@dp.message_handler(Text(equals='⚽️🏀🎾 Текущие турниры'))
 @dp.message_handler(Command('current_tournaments'))
 @check_user
 async def current_tournaments(message: types.Message,
@@ -86,30 +75,11 @@ async def current_tournaments(message: types.Message,
         await message.answer('У вас отсутсвует псевдоним, введите его')
         return
     
-    msg_text = f'📋Список турниров, в которых Вы зарегистрированы\n📌Ваш никнейм: {nickname}\n⬇️Выберите турнир⬇️'
+    msg_text = f'📋Список турниров, в которых Вы зарегистрированы\n📌Ваш ник: {nickname}\n⬇️Выберите турнир⬇️'
     data_ts = db.get_data_list(
-        get_prompt_view_user_tournaments(str(message.chat.id))
+        get_prompt_view_user_tournaments(nickname)
     )
     user_tournaments = [i['tournament'] for i in data_ts]
     await message.answer(
         text=msg_text, reply_markup=get_tournaments_kb(*user_tournaments)
     )
-
-
-@dp.message_handler(Text(equals='Мои турниры'))
-@dp.message_handler(Command('my_tournaments'))
-@check_user
-async def my_tournaments(message: types.Message, *args) -> None:
-    user_chat_id = str(message.chat.id)
-    username = message.from_user.username
-    if not username:
-        username = message.from_user.full_name
-
-    msg_text = "📍Вы зарегистрированы в этих турнирах:\n⬇️⬇️⬇️⬇️\n\n"
-
-    comparsion = Comparison()
-    for item in comparsion.get_user_tournaments(user_chat_id):
-        msg_text += f'{item}\n'
-
-    await message.answer(msg_text)
-    
