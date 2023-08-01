@@ -7,7 +7,8 @@ from ..keyboards import get_tournaments_kb
 from database import (Database,
                       PROMPT_VIEW_USERS,
                       get_prompt_update_nickname,
-                      get_prompt_view_user_tournaments)
+                      get_prompt_view_user_tournaments,
+                      get_prompt_view_nickname)
 from googlesheets import Users, Rating
 
 
@@ -32,25 +33,23 @@ async def get_nickname(message: types.Message, state: FSMContext) -> None:
     db = Database()
     all_users = db.get_data_list(PROMPT_VIEW_USERS)
 
-    nicknames = {}
-    for user in all_users:
-        nicknames[user['chat_id']] = user['nickname']
+    nicknames = [i['nickname'] for i in all_users]
 
-    if nickname in list(nicknames.values()):
+    if nickname in nicknames:
         await message.answer(
             '❌❌Такой псевдоним уже занят, напишите другой'
         )
         await state.finish()
         return
     
-    try: old_nick = nicknames[user_chat_id]
-    except KeyError: old_nick = None
+    old_nick = db.get_data_list(
+        get_prompt_view_nickname(user_chat_id)
+    )[0]['nickname']
 
     u = Users()             # update the nickname in users table 
     u.update_nickname(new_nick=nickname, chat_id=user_chat_id)     
-    if old_nick:
-        p = Rating()        # update the nickname in users table
-        p.update_nickname(new_nick=nickname, old_nick=old_nick)
+    r = Rating()            # update the nickname in users table
+    r.update_nickname(new_nick=nickname, old_nick=old_nick)
 
     prompts = get_prompt_update_nickname(    # update the nickname in the databases
         user_chat_id, new_nick=nickname, old_nick=old_nick
@@ -58,7 +57,7 @@ async def get_nickname(message: types.Message, state: FSMContext) -> None:
     db.action(*prompts)
 
     await state.finish()
-    await message.answer("✅Псевдоним записан")
+    await message.answer("✅ Ник принят")
 
 
 

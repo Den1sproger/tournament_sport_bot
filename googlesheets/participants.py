@@ -37,18 +37,22 @@ class Users(Connect):
         self.worksheet = self.spreadsheet.worksheet(self.SHEET_NAME)
 
 
-    def add_user(self, chat_id: str,
+    def add_user(self,
+                 chat_id: str,
                  username: str,
                  nickname: str = '',
                  score: int = 0) -> None:
         # add user in table
-        users = self.worksheet.col_values(2)
-        if chat_id not in users:
-            row = len(users) + 1
+        chat_ids = self.worksheet.col_values(2)
+        nicknames = self.worksheet.col_values(3)
+        if chat_id not in chat_ids:
+            row = len(chat_ids) + 1
             self.worksheet.update(
                 f'{self.CELLS_COLS["username"]}{row}',
                 [[username, chat_id, nickname, score]]
             )
+        elif nickname not in nicknames:
+            self.update_nickname(new_nick=nickname, chat_id=chat_id)
         
 
     def update_nickname(self, new_nick: str,

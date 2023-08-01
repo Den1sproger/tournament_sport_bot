@@ -91,20 +91,9 @@ def get_prompt_update_answer(chat_id: str,
     return f"UPDATE answers SET answer={new_answer} WHERE chat_id='{chat_id}' AND game_key='{game_key}' AND tournament='{tournament}';"
 
 
-# def get_prompt_view_user_tournaments(chat_id: str) -> str:
-#     return f"SELECT tournament FROM users_tournaments WHERE chat_id='{chat_id}';"
-
 def get_prompt_view_user_tournaments(nickname: str) -> str:
     return f"SELECT tournament FROM participants WHERE nickname='{nickname}';"
 
-
-# def get_prompt_add_user_tournament(chat_id: str,
-#                                    tournament: str) -> str:
-#     return f"INSERT INTO users_tournaments (chat_id, tournament) VALUES ('{chat_id}', '{tournament}');"
-
-
-# def get_prompt_delete_user_tournaments(chat_id: str) -> str:
-#     return f"DELETE FROM users_tournaments WHERE chat_id='{chat_id}';"
 
 
 __all__ = [

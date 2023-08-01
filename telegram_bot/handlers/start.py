@@ -76,11 +76,9 @@ async def get_start_nickname(message: types.Message,
     db = Database()
     all_users = db.get_data_list(PROMPT_VIEW_USERS)
 
-    nicknames = {}
-    for user in all_users:
-        nicknames[user['chat_id']] = user['nickname']
+    nicknames = [i['nickname'] for i in all_users]
 
-    if nickname in list(nicknames.values()):
+    if nickname in nicknames:
         await message.answer(
             '❌❌Такой псевдоним уже занят, напишите другой'
         )
