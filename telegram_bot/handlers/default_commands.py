@@ -74,11 +74,15 @@ async def current_tournaments(message: types.Message,
         await message.answer('У вас отсутсвует псевдоним, введите его')
         return
     
-    msg_text = f'📋Список турниров, в которых Вы зарегистрированы\n📌Ваш ник: {nickname}\n⬇️Выберите турнир⬇️'
     data_ts = db.get_data_list(
         get_prompt_view_user_tournaments(nickname)
     )
+    if not data_ts:
+        await message.answer('У вас пока отсутствуют активные турниры, вы будете оповещены')
+        return
+    
     user_tournaments = [i['tournament'] for i in data_ts]
+    msg_text = f'📋Список турниров, в которых Вы зарегистрированы\n📌Ваш ник: {nickname}\n⬇️Выберите турнир⬇️'
     await message.answer(
         text=msg_text, reply_markup=get_tournaments_kb(*user_tournaments)
     )
