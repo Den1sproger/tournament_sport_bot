@@ -6,6 +6,6 @@ main_kb = ReplyKeyboardMarkup(
     resize_keyboard=True,
     keyboard=[
         [KeyboardButton('⚽️🏀🎾 Текущие турниры')],
-        [KeyboardButton('👨‍💼Ввести ник'), KeyboardButton('🆘Помощь')]
+        [KeyboardButton('👨‍💼 Изменить Ник'), KeyboardButton('🆘Помощь')]
     ]
 )

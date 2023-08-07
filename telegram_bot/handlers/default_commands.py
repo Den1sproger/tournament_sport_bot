@@ -14,13 +14,13 @@ from googlesheets import Users, Rating
 
 
 # writing the internal nickname
-@dp.message_handler(Text(equals='👨‍💼Ввести ник'))
+@dp.message_handler(Text(equals='👨‍💼 Изменить Ник'))
 @dp.message_handler(Command('nickname'))
 @check_user
 async def write_nickname(message: types.Message, *args) -> None:
     await _ProfileStatesGroup.get_nickname.set()
     await message.answer(
-        'Введите ваш псевдоним, он будет использоваться далее во всех турнирах'
+        '💬 Введите Ник, который будет отображаться в турнирах'
     )
 
 
@@ -78,11 +78,13 @@ async def current_tournaments(message: types.Message,
         get_prompt_view_user_tournaments(nickname)
     )
     if not data_ts:
-        await message.answer('У вас пока отсутствуют активные турниры, вы будете оповещены')
+        await message.answer(
+            '❗️ В данный момент турнир не начат\n🗣 О начале турнира Вы будете оповещены'
+        )
         return
     
     user_tournaments = [i['tournament'] for i in data_ts]
-    msg_text = f'📋Список турниров, в которых Вы зарегистрированы\n📌Ваш ник: {nickname}\n⬇️Выберите турнир⬇️'
+    msg_text = f'📋Список турниров, в которых Вы зарегистрированы\n📌Ваш Ник: {nickname}\n⬇️Выберите турнир⬇️'
     await message.answer(
         text=msg_text, reply_markup=get_tournaments_kb(*user_tournaments)
     )

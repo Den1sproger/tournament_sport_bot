@@ -86,13 +86,12 @@ def get_update_msg(game: dict,
         coeffs = [coeff_1, coeff_2, draw_coeff]
         coeffs_txt = f'П1-{coeff_1}  X-{draw_coeff}  П2-{coeff_2}'
 
-    msg_text = f'{tournament}\n\n' \
+    msg_text = f'{tournament}\n' \
         f'{game["sport"]}\n\n' \
-        f'МАТЧ:\n{game["first_team"]} - {game["second_team"]}\n' \
+        f'МАТЧ: {game["first_team"]} - {game["second_team"]}\n' \
         f'НАЧАЛО: {game["begin_time"]}\n' \
         f'КОЭФФИЦИЕНТЫ: {coeffs_txt}\n\n' \
-        f'ССЫЛКА: {game["url"]}\n\n' \
-        'Ниже представлены баллы, которые вы можете получить при угадывании'
+        f'ОБЗОР МАТЧА:\n{game["url"]}'
     
     return get_question_ikb(
         quantity=len(questions[type_]),
