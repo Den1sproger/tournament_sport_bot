@@ -7,9 +7,14 @@ PROMPT_VIEW_USERS = "SELECT chat_id, nickname FROM users;"
 PROMPT_VIEW_CURRENT_CHAT_iDS = "SELECT chat_id FROM current_questions;"
 
 
-def get_prompt_view_games(tourn_type: str) -> str:
-    return "SELECT game_key, sport, begin_time, first_team, first_coeff, second_team," \
-        f"second_coeff, draw_coeff, url FROM games WHERE game_status=1 AND tourn_type='{tourn_type}';"
+def get_prompt_view_games(tourn_type: str = None,
+                          tourn_name: str = None) -> str:
+    if tourn_type:
+        return "SELECT game_key, sport, begin_time, first_team, first_coeff, second_team," \
+            f"second_coeff, draw_coeff, url FROM games WHERE game_status=1 AND tourn_type='{tourn_type}';"
+    if tourn_name:
+        return "SELECT game_key, sport, begin_time, first_team, first_coeff, second_team," \
+            f"second_coeff, draw_coeff, url FROM games WHERE game_status=1 AND '{tourn_name.upper()}' LIKE concat('%', tourn_type, '%');"
 
 
 def get_prompt_view_rating(tournament: str) -> str:

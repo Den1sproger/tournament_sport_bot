@@ -196,7 +196,7 @@ async def current_tournament(callback: types.CallbackQuery) -> None:
         await update_questions_data(callback)
 
     else:
-        await callback.answer('В данный момент игры отсутсвуют')
+        await callback.answer('В данный момент турнир недоступен')
 
 
 
@@ -245,26 +245,31 @@ async def get_leaderboard(callback: types.CallbackQuery,
                           nickname: str) -> None:
     tournament_name = callback.data.replace('leader_', '')
 
-    rating = db.get_data_list(get_prompt_view_rating(tournament_name))
-    msg_text = f'🏆Таблица лидеров {tournament_name}:\n'
+    db = Database()
+    games = db.get_data_list(get_prompt_view_games(tourn_name=tournament_name))
 
-    own_number = 0
-    own_score = 0
-    count = 0
-    for participant in rating:
-        count += 1
-        if count <= 10:
-            msg_text += f'{count}. {participant["nickname"]}: {participant["scores"]}\n'
-        if participant["nickname"] == nickname:
-            own_number = count
-            own_score = participant["scores"]
-            if count >= 10: break
+    if games:
+        rating = db.get_data_list(get_prompt_view_rating(tournament_name))
+        msg_text = f'🏆Таблица лидеров {tournament_name}:\n'
 
-    # user's position
-    msg_text += f'\nВаша позиция в списке: {own_number} из {len(rating)}' \
-                f'\n{own_number}. {nickname}: {own_score}'
-    await callback.message.answer(msg_text)
+        own_number = 0
+        own_score = 0
+        count = 0
+        for participant in rating:
+            count += 1
+            if count <= 10:
+                msg_text += f'{count}. {participant["nickname"]}: {participant["scores"]}\n'
+            if participant["nickname"] == nickname:
+                own_number = count
+                own_score = participant["scores"]
+                if count >= 10: break
 
+        # user's position
+        msg_text += f'\nВаша позиция в списке: {own_number} из {len(rating)}' \
+                    f'\n{own_number}. {nickname}: {own_score}'
+        await callback.message.answer(msg_text)
+    else:
+        await callback.answer('В данный момент таблица лидеров недоступна')
 
 
 # come back to the menu of users tournaments
