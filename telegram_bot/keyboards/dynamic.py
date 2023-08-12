@@ -69,10 +69,7 @@ def get_tournaments_kb(*tournaments) -> InlineKeyboardMarkup:
     inline_keyboard = []
     for item in tournaments:
         inline_keyboard.append(
-            [
-                InlineKeyboardButton(f'Турнир {item}', callback_data=f'tourn_{item}'),
-                InlineKeyboardButton(f'Таблица лидеров {item}', callback_data=f'leader_{item}')
-            ]
+            [InlineKeyboardButton(f'Турнир {item}', callback_data=f'tourn_{item}')]
         )
 
     ikb = InlineKeyboardMarkup(inline_keyboard=inline_keyboard)

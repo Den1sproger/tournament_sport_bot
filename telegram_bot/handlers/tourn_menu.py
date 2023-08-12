@@ -1,5 +1,4 @@
 from aiogram import types
-from .config import check_user
 from ..bot_config import dp
 from ..keyboards import get_question_ikb, get_tournaments_kb
 from database import (Database,
@@ -13,7 +12,6 @@ from database import (Database,
                       get_prompt_delete_current_info,
                       get_prompt_update_current_index,
                       get_prompt_view_games,
-                      get_prompt_view_rating,
                       get_prompt_view_nickname,
                       get_prompt_view_user_tournaments,
                       get_prompt_add_answer,
@@ -245,41 +243,6 @@ async def second_team(callback: types.CallbackQuery) -> None:
 async def draw(callback: types.CallbackQuery) -> None:
     await answer(answer=3, callback=callback)
 
-
-
-# get the fisrt 10 participants sorted by scores
-@dp.callback_query_handler(lambda callback: callback.data.startswith('leader_'))
-@check_user
-async def get_leaderboard(callback: types.CallbackQuery,
-                          db: Database,
-                          nickname: str) -> None:
-    tournament_name = callback.data.replace('leader_', '')
-
-    db = Database()
-    games = db.get_data_list(get_prompt_view_games(tourn_name=tournament_name))
-
-    if games:
-        rating = db.get_data_list(get_prompt_view_rating(tournament_name))
-        msg_text = f'🏆Таблица лидеров {tournament_name}:\n'
-
-        own_number = 0
-        own_score = 0
-        count = 0
-        for participant in rating:
-            count += 1
-            if count <= 10:
-                msg_text += f'{count}. {participant["nickname"]}: {participant["scores"]}\n'
-            if participant["nickname"] == nickname:
-                own_number = count
-                own_score = participant["scores"]
-                if count >= 10: break
-
-        # user's position
-        msg_text += f'\nВаша позиция в списке: {own_number} из {len(rating)}' \
-                    f'\n{own_number}. {nickname}: {own_score}'
-        await callback.message.answer(msg_text)
-    else:
-        await callback.answer('В данный момент таблица лидеров недоступна')
 
 
 # come back to the menu of users tournaments
