@@ -24,6 +24,16 @@ from database import (Database,
 
 # variables for the tournament's questions
 
+
+sport_symbols = {
+    'ФУТБОЛ': ' ⚽️⚽️⚽️',
+    'ТЕННИС': '🎾🎾🎾',
+    'ХОККЕЙ': '🏒🏒🏒',
+    'БАСКЕТБОЛ': '🏀🏀🏀',
+    'ГАНДБОЛ': '🤾🏻‍♂️🤾‍♂️🤾‍♂️',
+    'ВОЛЕЙБОЛ': '🏐🏐🏐'
+}
+
 questions = {
     'FAST': [],
     'STANDART': [],
@@ -87,7 +97,7 @@ def get_update_msg(game: dict,
         coeffs_txt = f'П1-{coeff_1}  X-{draw_coeff}  П2-{coeff_2}'
 
     msg_text = f'{tournament}\n' \
-        f'{game["sport"]}\n\n' \
+        f'{game["sport"].upper()}{sport_symbols[game["sport"].upper()]}\n\n' \
         f'МАТЧ: {game["first_team"]} - {game["second_team"]}\n' \
         f'НАЧАЛО: {game["begin_time"]}\n' \
         f'КОЭФФИЦИЕНТЫ: {coeffs_txt}\n\n' \
