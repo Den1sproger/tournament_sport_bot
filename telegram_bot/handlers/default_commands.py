@@ -6,6 +6,7 @@ from ..bot_config import dp
 from ..keyboards import get_tournaments_kb
 from database import (Database,
                       PROMPT_VIEW_USERS,
+                      PROMPT_VIEW_ADMIN_NICKNAMES,
                       get_prompt_update_nickname,
                       get_prompt_view_user_tournaments,
                       get_prompt_view_nickname)
@@ -32,8 +33,9 @@ async def get_nickname(message: types.Message, state: FSMContext) -> None:
 
     db = Database()
     all_users = db.get_data_list(PROMPT_VIEW_USERS)
+    admin_nicks = db.get_data_list(PROMPT_VIEW_ADMIN_NICKNAMES)
 
-    nicknames = [i['nickname'] for i in all_users]
+    nicknames = [i['nickname'] for i in all_users] + [i['nickname'] for i in admin_nicks]
 
     if nickname in nicknames:
         await message.answer(
