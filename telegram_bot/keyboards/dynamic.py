@@ -10,8 +10,8 @@ def get_scores_by_coeff(coeff: str) -> int:
         return 3
     
     count = 126
-    switch = 1
-    score = 3
+    switch = 2
+    score = 5
 
     while score < 30:
         interval = [i / 100 for i in range(count, count + 50)]
