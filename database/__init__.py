@@ -4,6 +4,7 @@ from .db_work import Database
 
 TOURNAMENT_TYPES = ['SLOW', 'STANDART', 'FAST']
 PROMPT_VIEW_USERS = "SELECT chat_id, nickname FROM users;"
+PROMPT_VIEW_ADMIN_NICKNAMES = "SELECT nickname FROM admin_nicknames;"
 PROMPT_VIEW_CURRENT_CHAT_iDS = "SELECT chat_id FROM current_questions;"
 
 
@@ -105,6 +106,7 @@ __all__ = [
     'Database',
     'TOURNAMENT_TYPES',
     'PROMPT_VIEW_USERS',
+    'PROMPT_VIEW_ADMIN_NICKNAMES',
     'PROMPT_VIEW_CURRENT_CHAT_iDS',
     'get_prompt_view_current_info',
     'get_prompt_update_current_index',

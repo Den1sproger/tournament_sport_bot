@@ -9,6 +9,7 @@ from googlesheets import Users, Comparison
 from database import (Database,
                       get_prompt_add_user,
                       get_prompt_update_nickname,
+                      PROMPT_VIEW_ADMIN_NICKNAMES,
                       PROMPT_VIEW_USERS)
 from ..bot_config import default_commands
 
@@ -75,8 +76,9 @@ async def get_start_nickname(message: types.Message,
 
     db = Database()
     all_users = db.get_data_list(PROMPT_VIEW_USERS)
+    admin_nicks = db.get_data_list(PROMPT_VIEW_ADMIN_NICKNAMES)
 
-    nicknames = [i['nickname'] for i in all_users]
+    nicknames = [i['nickname'] for i in all_users] + [i['nickname'] for i in admin_nicks]
 
     if nickname in nicknames:
         await message.answer(
