@@ -7,19 +7,27 @@ def get_scores_by_coeff(coeff: str) -> int:
         return 0
     coefficient = float(coeff.replace(',', '.'))
     if coefficient < 1.26:
-        return 2
+        return 3
     
-    translate = []
     count = 126
-    for score in range(3, 20):
+    switch = 1
+    score = 3
+
+    while score < 30:
         interval = [i / 100 for i in range(count, count + 50)]
         if coefficient in interval:
             return score
-        translate.append(interval)
         count += 50
+
+        if switch == 1:
+            score += 2
+            switch = 2
+        else:
+            score += 1
+            switch = 1
     else:
         if coefficient >= 9.76:
-            return 20
+            return 30
 
 
 def get_question_ikb(quantity: int,
